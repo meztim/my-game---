@@ -1,4 +1,6 @@
 from pygame import *
+from random import *
+
 
 class Picture:
     def __init__(self, image_, w, h, x, y, speed):
@@ -23,20 +25,28 @@ class Platform1(Picture):
         self.color = color
 
     def move(self, keys):
-        if keys[K_UP] and self.rect.y != 10:
+        if keys[K_w] and self.rect.y != 10:
             self.rect.y -= self.speed
-        if keys[K_DOWN] and self.rect.y != 490:
+        if keys[K_s] and self.rect.y != 490:
             self.rect.y += self.speed
+        if self.rect.y <= 5 :
+            self.rect.y = 5
+        elif self.rect.y >= 395:
+            self.rect.y = 395
 
 class Platform2(Picture):
     def __init__(self, image, w, h, x, y, speed):
         super().__init__(image, w, h, x, y, speed)
 
     def move(self, keys):
-        if keys[K_w] and self.rect.x != 10:
+        if keys[K_UP] and self.rect.x != 10:
             self.rect.y -= self.speed
-        if keys[K_s] and self.rect.y != 490:
+        if keys[K_DOWN] and self.rect.y != 490:
             self.rect.y += self.speed
+        if self.rect.y <= 5 :
+            self.rect.y = 5
+        elif self.rect.y >= 395:
+            self.rect.y = 395
 
 class Boll(Picture):
     def __init__(self, image, w, h, x, y, speed, speedx, speedy):
@@ -45,35 +55,33 @@ class Boll(Picture):
         self.speedy = speedy
 
     def update(self):
+        global a, b
         self.rect.x -= self.speedx
         self.rect.y -= self.speedy
         if self.rect.colliderect(platform1.rect):
             self.speedx = -self.speedx
-        elif self.rect.y == 0  :
+        elif self.rect.y <= 0  :
             self.speedy = -self.speedy
         elif self.rect.colliderect(platform2.rect):
             self.speedx = -self.speedx
-        elif self.rect.y == 435:
+        elif self.rect.y >= 435:
             self.speedy = -self.speedy
-
-    def recet (self):
-        if boll.rect.x >= 0:
+        if boll.rect.x <= -65:
             boll.rect.x = 285
             boll.rect.y = 185
             a += 1
-        elif boll.rect.x >= 700:
+        elif boll.rect.x >= 765:
             boll.rect.x = 285
             boll.rect.y = 185
             b += 1
 
 
-
 window = display.set_mode((700,500))
 display.set_caption('Пинг-понг')
-background = transform.scale(image.load('YU69WYqi1Vg.jpg'),(700,500))
+background = transform.scale(image.load('6458324097.jpg'),(700,500))
 
 #создание объктов игры
-boll = Boll('wimbledon.crop_642x481_0,7.preview.jpg', 65, 65, 330, 180, 5, 3, 1 )
+boll = Boll('New Piskel.png', 65, 65, 330, 180, 5, randint(2,4), randint(2,4))
 platform1 = Platform1('8a3e58af9aebd6aad8c51f6c9d8fdfcd.jpg', 30, 100, 40, 150, 6)
 platform2 = Platform2('d8e9f9afeae4571b6d3427115de34f45.jpg', 30, 100, 660, 150, 6)
 #Настрока частоты обновления экрана
@@ -90,7 +98,7 @@ text_gor = my_font.render('гора выйграла', True, (117, 0, 0))
 #текс игры
 font.init()
 font = font.SysFont(None, 30)
-text1 = 'Счёт:1'
+text1 = 'Счёт:'
 text2 = 'Cчет:'
 
 
@@ -98,6 +106,8 @@ code = 0
 
 a = 0
 b = 0
+
+
 
 game = True
 while game:
@@ -117,11 +127,11 @@ while game:
         platform1.reset()
         platform2.reset()
 
-            surface = font.render(text2 + str(b), True, (0, 255, 255))
-            window.blit(surface, (30, 30))
+        surface = font.render(text2 + str(b), True, (0, 255, 255))
+        window.blit(surface, (30, 30))
 
-            surface1 = font.render(text1 + str(a), True, (0, 255, 255))
-            window.blit(surface1, (610, 30))
+        surface1 = font.render(text1 + str(a), True, (0, 255, 255))
+        window.blit(surface1, (610, 30))
 
         if a >= 3:
             code = 1
